@@ -4,6 +4,8 @@
 
 #define VERSION 0.2
 
+#define CNT_INSTR 4	/* there are 4 instructions that we need to loop through */
+
 #define comparestr(a, b) (strcmp(a, b) == 0)
 
 int seeker(FILE *, long int);
@@ -27,7 +29,8 @@ const char match_register[4][3] = {"A", "B", "C", "[A]"};
 
 void halt()
 {
-	exit(0);
+//	exit(0);
+	puts("suppose halt");
 }
 
 void clear(int *pntr)
@@ -76,20 +79,20 @@ int main(int argc, char *argv[])
 		/* sets the file position to PC */
 		seeker(file, PC);
 
-		/* initalizing [A] */
+		/* initalizes [3] to A index, *ram */
 		registers[3] = (ram + A);
 
 		/* parses line, putting each word into a variable */
 		sscanf(line, "%s %s %s %ld", operator, register1, register2, &z);
 
-		printf(" =%d=  a: %d  b: %d  c: %d\n", PC, A, B, C); 
+		printf(" ++%s++ =%d=  a: %d  b: %d  c: %d\n", operator, PC, A, B, C); 
 
 		/* when halt: exit and return success */
 		if (comparestr(operator, "HALT")) {
 			halt();	
 		} else if (comparestr(operator, "CLEAR")) {
 			int i;
-			for (i = 0; i < 4; i++) {
+			for (i = 0; i < CNT_INSTR; i++) {
 				if (comparestr(register1, match_register[i])) {
 					clear(registers[i]);
 					break;
@@ -98,7 +101,7 @@ int main(int argc, char *argv[])
 			}
 		} else if (comparestr(operator, "INC")) {
 			int i;
-			for (i = 0; i < 4; i++) {
+			for (i = 0; i < CNT_INSTR; i++) {
 				if (comparestr(register1, match_register[i])) {
 					inc(registers[i]);
 					break;
@@ -111,14 +114,17 @@ int main(int argc, char *argv[])
 			int i;
 			int val1, val2;
 
-			for (i = 0; i < 4; i++) {
+			/* there was a destructive comment here */
+			z--;
+
+			for (i = 0; i < CNT_INSTR; i++) {
 				if (comparestr(register1, match_register[i])) {
 					val1 = *registers[i];
 					break;
 				}
 			}
 
-			for (i = 0; i < 4; i++) {
+			for (i = 0; i < CNT_INSTR; i++) {
 				if (comparestr(register2, match_register[i])) {
 					val2 = *registers[i];
 					break;
@@ -128,7 +134,7 @@ int main(int argc, char *argv[])
 			/* if a matching register was not found in register2 then assume
 			   it's an integer in string form.
 			 */
-			if (i > 3) {
+			if (i > CNT_INSTR - 1) {
 				val2 = atoi(register2);	
 				jie(val1, val2, z);
 			} else {
@@ -138,9 +144,10 @@ int main(int argc, char *argv[])
 		} else {
 			fprintf(stderr, "error\n");
 		}
+
 		PC++;
 	}
-	/* if HALT didn't halt the program something went wrong */
+	/* if HALT didn't stop the program something went wrong */
 	return 1;
 }
 

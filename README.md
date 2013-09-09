@@ -12,5 +12,7 @@ Ragur.c - the machine itself, interprets
 
 Ragur is a word in old norwegian, meaning
 a feminine man which was a great insult in the
-old days, were masculinity was the thing that
-kept the olde warriors going.
+old days; were masculinity was the thing that
+kept the warriors going. (but the name doesn't
+really link, at all, to the program itself, unless
+you discover a super cool acronym.)

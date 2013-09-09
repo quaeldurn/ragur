@@ -34,6 +34,10 @@ for (my $i = 0; $i <= $#file; $i++) {
 	} else {
 		$file[$i] =~ s/^\s*//;
 	}
+	
+	if ($file[$i] =~ m/^;/) {
+		splice(@file, $i, 1);
+	}
 }
 
 # second read, checking if operations are correctly written and replacing
