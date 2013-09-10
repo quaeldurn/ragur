@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define VERSION 0.2
 
@@ -29,8 +30,7 @@ const char match_register[4][3] = {"A", "B", "C", "[A]"};
 
 void halt()
 {
-//	exit(0);
-	puts("suppose halt");
+	exit(0);
 }
 
 void clear(int *pntr)
@@ -56,6 +56,32 @@ void jie(int value1, int value2, long int z)
 
 int main(int argc, char *argv[]) 
 {
+
+	{
+		char c;
+
+		int vflag = 0;
+		int helpflag = 0;
+
+		while ((c = getopt(argc, argv, "v")) != -1) {
+			switch (c) {
+			  case 'v':
+			  	vflag = 1;
+			  case '?':
+			  	helpflag = 1;
+			}
+		}
+
+		if (vflag == 1) {
+			printf("Version 0.2\n");
+			return 0;
+		} else if (helpflag == 1) {
+			printf("Usage: ragur file\n");
+			printf("file being a file parsed by anal.pl");
+		}
+
+	}
+
 	/* allocates the area available through derefrencing A */
 	ram = malloc(60 * sizeof (int));
 
@@ -76,8 +102,6 @@ int main(int argc, char *argv[])
 	FILE *file = fopen(argv[1], "r");
 
 	while (getline(&line, &buffer, file) != EOF) {
-		/* sets the file position to PC */
-		seeker(file, PC);
 
 		/* initalizes [3] to A index, *ram */
 		registers[3] = (ram + A);
@@ -146,6 +170,9 @@ int main(int argc, char *argv[])
 		}
 
 		PC++;
+
+		/* sets the file position to PC */
+		seeker(file, PC);
 	}
 	/* if HALT didn't stop the program something went wrong */
 	return 1;
