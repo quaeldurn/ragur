@@ -27,7 +27,6 @@ int *registers[4] = {&A, &B, &C, NULL};
 
 const char match_register[4][3] = {"A", "B", "C", "[A]"};
 
-
 void halt()
 {
 	exit(0);
@@ -49,21 +48,20 @@ void inc(int *pntr)
 void jie(int value1, int value2, long int z)
 {
 	if (value1 == value2) {
-		PC = z;	
+		PC = z - 1;	
 	}
 }
 
 
 int main(int argc, char *argv[]) 
 {
-
+	/* getopt block */
 	{
 		char c;
-
 		int vflag = 0;
 		int helpflag = 0;
 
-		while ((c = getopt(argc, argv, "v")) != -1) {
+		while ((c = getopt(argc, argv, "v?")) != -1) {
 			switch (c) {
 			  case 'v':
 			  	vflag = 1;
@@ -77,7 +75,7 @@ int main(int argc, char *argv[])
 			return 0;
 		} else if (helpflag == 1) {
 			printf("Usage: ragur file\n");
-			printf("file being a file parsed by anal.pl");
+			printf("file being a file parsed by anal.pl\n");
 		}
 
 	}
